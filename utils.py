@@ -1,5 +1,7 @@
 import random
 import csv
+import objecttier
+import sqlite3
 
 def populateStudents(dbConn):
     cursor = dbConn.cursor()
@@ -71,3 +73,65 @@ def populateDatabase(dbConn):
     populateStudents(dbConn)
     populateCourses(dbConn)
     populatePrerequisites(dbConn)
+
+def getDB():
+    return sqlite3.connect("students.db")
+
+
+#####################################################
+#
+# Main Commands
+#
+#####################################################
+    
+
+
+def printCommands():
+    print("Please enter one of the following commands:")
+    print("1. Display Students.")
+    print("2. Display Courses.")
+    print("3. Display Prerequisites.")
+    print("4. Create an new student.")
+    print("5. Create an new course.")
+    print("6. Create an new prerequisites.")
+    print("Insert 'x' to quit.")
+
+
+def display_Students(display):
+    students = objecttier.get_students()
+    j = 0
+    if(display == len(students)):
+        print("There are no more students")
+        return
+    for i in range(display,len(students)):
+        if(students[i].identifier == ' '):
+            identifier = "No identifier"
+        else:
+            identifier = students[i].identifier
+        print(f"""Name: {students[i].name}
+Email: {students[i].email}
+Birthdate: {students[i].birthdate}
+Address: {students[i].address}
+Identifier: {identifier}
+""")
+        j += 1
+        if(j == 10):
+            break
+    print_more = input("Do you want to see more students?(Y/N): ")
+    if(print_more.upper() == 'Y'):
+        display_Students(i+1)
+
+def display_Courses():
+    pass
+
+def display_Prerequisites():
+    pass
+
+def create_Student():
+    pass
+
+def create_Course():
+    pass
+
+def create_Prerequisites():
+    pass

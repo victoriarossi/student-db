@@ -1,32 +1,26 @@
-import sqlite3
-import os
 import utils
 
 if __name__ == "__main__":
+    print("*********** Welcome to the Student Database ***********")
 
-    # Create database 
-    script_file = "setup.sql"
-    db_file = "students.db"
+    utils.printCommands()
+    command = input("Input: ")
+    while(command.isdigit()):
+        command = int(command)
+        if(command == 1):
+            utils.display_Students(0)
+        elif(command == 2):
+            utils.display_Courses()
+        elif(command == 3):
+            utils.display_Prerequisites()
+        elif(command == 4):
+            utils.create_Student()
+        elif(command == 5):
+            utils.create_Course()
+        elif(command == 6):
+            utils.create_Prerequisites()
+        else:
+            print("Invalid command, please try again.")
+            utils.printCommands()
 
-    # Create a new database file if it doesn't exist
-    open(db_file, 'a').close()
-
-    # Connect to database
-    dbConn = sqlite3.connect(db_file)
-    cursor = dbConn.cursor()
-
-    # Read the SQL script
-    with open(script_file, 'r') as f:
-        sql_script = f.read()
-
-    # Execute the SQL commands
-    cursor.executescript(sql_script)
-
-    # Commit the changes
-    dbConn.commit()
-    
-    # Populate database
-    utils.populateDatabase(dbConn)
-
-    # Close the connection
-    dbConn.close()
+        command = input("Input: ")
