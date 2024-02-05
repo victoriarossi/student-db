@@ -25,6 +25,8 @@ if __name__ == "__main__":
             utils.get_student()
         elif(command == 9):
             utils.get_course()
+        elif(command == 10):
+            utils.get_prerequisites()
         else:
             print("Invalid command, please try again.")
             utils.printCommands()

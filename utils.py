@@ -93,10 +93,11 @@ def printCommands():
     print("3. Display Prerequisites.")
     print("4. Create an new student.")
     print("5. Create an new course.")
-    print("6. Create an new prerequisites.")
-    print("7. Create a new registration.")
+    print("6. Add a new prerequisites.")
+    print("7. Add a new registration.")
     print("8. Display one student information.")
     print("9. Display one course information.")
+    print("10. Display one course prerequisites.")
     print("Insert 'x' to quit.")
 
 def display_Students():
@@ -259,7 +260,26 @@ def create_Course():
     if(i == 'Y'):
         print(get_course_helper(code))
 
+def get_prerequisites():
+    code = input("Input the courses code: ")
+    get_prerequisites_by_code(code)
 
+def get_prerequisites_by_code(code):
+    prerequisites = objecttier.get_prerequisites_by_code(code)
+    if(prerequisites == []):
+        print(f"{code} has no prerequisites")
+    else:
+        print(f"{code} prerequisites are: ")
+        i = 1
+        for course in prerequisites:
+            print(f"  {i}. {course}")
+            i += 1
 
 def create_Prerequisites():
-    pass
+    print("Please enter the information of the courses")
+    code2 = input("Input the course's prerequisite: ")
+    code1 = input("Input the course's code: ")
+    objecttier.create_prerequisites(code1, code2)
+    i = input("Want to see the new prerequisite? (Y/N): ").upper()
+    if(i == 'Y'):
+        objecttier.get_prerequisites_by_code(code1)

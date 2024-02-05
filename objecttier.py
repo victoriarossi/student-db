@@ -109,5 +109,9 @@ def create_course(code, name, description, credits, prerequisites):
         """
         datatier.create_entry(dbConn, sql, [code,course])
 
-def create_prerequisites():
-    pass
+def create_prerequisites(code1, code2):
+    dbConn = utils.getDB()
+    sql = """
+    INSERT INTO Prerequisites VALUES (?,?)
+    """
+    datatier.create_entry(dbConn, sql, [code1, code2])
