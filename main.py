@@ -21,6 +21,8 @@ if __name__ == "__main__":
             utils.create_Prerequisites()
         elif(command == 7):
             utils.create_Registration()
+        elif(command == 8):
+            utils.get_student()
         else:
             print("Invalid command, please try again.")
             utils.printCommands()

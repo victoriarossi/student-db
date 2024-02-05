@@ -94,6 +94,8 @@ def printCommands():
     print("4. Create an new student.")
     print("5. Create an new course.")
     print("6. Create an new prerequisites.")
+    print("7. Create a new registration.")
+    print("8. Display one student information.")
     print("Insert 'x' to quit.")
 
 def display_Students():
@@ -176,8 +178,47 @@ def display_Prerequisites_helper(display):
     if(print_more.upper() == 'Y'):
         display_Prerequisites_helper(i+1)
 
+def invalid_format(date):
+    return False
+
+def get_student():
+    id = input("Input the student's ID: ")
+    get_student_helper(id)
+
+def get_student_helper(id):
+    student = objecttier.get_student(id)
+    if(student.identifier == ''):
+        identifier = "No identifier"
+    else:
+        identifier = student.identifier
+    print(f"""Name: {student.name}
+Email: {student.email}
+Birthdate: {student.birthdate}
+Address: {student.address}
+Identifier: {identifier}
+""")
+
+
 def create_Student():
-    pass
+    print("Please enter the information of the student you want to create")
+    id = input("Input the student's ID number: ")
+    first_name = input("Input the student's first name: ")
+    last_name = input("Input the student's last name: ")
+    email = input("Input the student's email: ")
+    birthdate = input("Input the student's birthdate(YYYY-MM-DD): ")
+    while(invalid_format(birthdate)):
+        birthdate = input("Input the student's birthdate(YYYY-MM-DD): ")
+    address = input("Input the student's address: ")
+    i = input("Do you want to add an identifier?(Y/N): ")
+    if(i.upper() == 'Y'):
+        identifier = input("Input the student's identifier: ")
+    else:
+        identifier = ""
+    objecttier.create_student(id, first_name,last_name,email,birthdate, address,identifier)
+    i = input("Want to see the students information?(Y/N): ").upper()
+    if(i == 'Y'):
+        print(get_student_helper(id))
+
 
 def create_Course():
     pass

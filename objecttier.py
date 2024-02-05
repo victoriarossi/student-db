@@ -65,10 +65,25 @@ def get_prerequisites():
         one.extend([course_info2[1],row[1]])
         p.append(one)
     return p
-    
 
-def create_student():
-    pass
+def get_student(id):
+    dbConn = utils.getDB()
+
+    sql = """
+    SELECT *
+    FROM Students
+    WHERE Students_ID = ?
+    """
+    result = datatier.select_one_row(dbConn,sql,[id])
+    return Student.Student(result[1] + " " + result[2], result[3], result[4], result[5], result[6])
+
+def create_student(id, first_name, last_name, email, birthdate, address, identifier):
+    dbConn = utils.getDB()
+
+    sql = """
+    INSERT INTO Students VALUES (?,?,?,?,?,?,?)
+    """
+    datatier.create_entry(dbConn,sql,[id, first_name, last_name, email, birthdate, address, identifier])
 
 def create_course():
     pass
