@@ -26,14 +26,13 @@ def get_courses():
     dbConn = utils.getDB()
     result = datatier.select_n_rows(dbConn,sql)
     c = []
-    print(result)
     for row in result:
-        prerequisites = get_prerequisites(row[0])
+        prerequisites = get_prerequisites_by_code(row[0])
         one = Course.Course(row[0],row[1],row[3],prerequisites,row[2])
         c.append(one)
     return c
 
-def get_prerequisites(code):
+def get_prerequisites_by_code(code):
     sql = """
     SELECT Course_Code1
     FROM Prerequisites
@@ -44,6 +43,27 @@ def get_prerequisites(code):
     p = []
     for row in result:
         p.append(row[0])
+    return p
+
+def get_prerequisites():
+    sql = """
+    SELECT *
+    FROM Prerequisites
+    """
+    dbConn = utils.getDB()
+    result = datatier.select_n_rows(dbConn,sql)
+    p = []
+    for row in result:
+        sql = """
+        SELECT *
+        FROM Courses
+        WHERE Course_Code = ?
+        """
+        course_info1 = datatier.select_one_row(dbConn, sql, [row[0]])
+        one = [course_info1[1],row[0]]
+        course_info2 = datatier.select_one_row(dbConn, sql, [row[1]])
+        one.extend([course_info2[1],row[1]])
+        p.append(one)
     return p
     
 

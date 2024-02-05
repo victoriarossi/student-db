@@ -96,8 +96,10 @@ def printCommands():
     print("6. Create an new prerequisites.")
     print("Insert 'x' to quit.")
 
+def display_Students():
+    display_Students_helper(0)
 
-def display_Students(display):
+def display_Students_helper(display):
     students = objecttier.get_students()
     j = 0
     identifier = " "
@@ -120,9 +122,12 @@ Identifier: {identifier}
             break
     print_more = input("Do you want to see more students?(Y/N): ")
     if(print_more.upper() == 'Y'):
-        display_Students(i+1)
+        display_Students_helper(i+1)
 
-def display_Courses(display):
+def display_Courses():
+    display_Courses_helper(0)
+
+def display_Courses_helper(display):
     courses = objecttier.get_courses()
     j = 0
     description = " "
@@ -151,10 +156,25 @@ Course prerequisites: {prerequisites}
             break
     print_more = input("Do you want to see more courses?(Y/N): ")
     if(print_more.upper() == 'Y'):
-        display_Courses(i+1)
+        display_Courses_helper(i+1)
 
 def display_Prerequisites():
-    pass
+    display_Prerequisites_helper(0)
+
+def display_Prerequisites_helper(display):
+    prerequisites = objecttier.get_prerequisites()
+    j = 0
+    if(display == len(prerequisites)):
+        print("There are no more students")
+        return
+    for i in range(display,len(prerequisites)):
+        print(f"{prerequisites[i][0]} ({prerequisites[i][1]}) is a prerequisite of {prerequisites[i][2]} ({prerequisites[i][3]})")
+        j += 1
+        if(j == 10):
+            break
+    print_more = input("Do you want to see more prerequisites?(Y/N): ")
+    if(print_more.upper() == 'Y'):
+        display_Prerequisites_helper(i+1)
 
 def create_Student():
     pass
