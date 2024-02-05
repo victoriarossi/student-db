@@ -14,7 +14,7 @@ def get_students():
     s = []
     for row in result:
         name = row[1] + " " + row[2]
-        one = Student.Student(name,row[3],row[4],row[5],row[6])
+        one = Student.Student(row[0],name,row[3],row[4],row[5],row[6])
         s.append(one)
     return s
 
@@ -75,7 +75,7 @@ def get_student(id):
     WHERE Students_ID = ?
     """
     result = datatier.select_one_row(dbConn,sql,[id])
-    return Student.Student(result[1] + " " + result[2], result[3], result[4], result[5], result[6])
+    return Student.Student(result[0],result[1] + " " + result[2], result[3], result[4], result[5], result[6])
 
 def create_student(id, first_name, last_name, email, birthdate, address, identifier):
     dbConn = utils.getDB()
@@ -135,3 +135,75 @@ def get_student_registration(id):
     for row in result:
         r.append([row[1],row[2]])
     return Registration.Registration(result[0][0], r)
+
+def update_student_name(id, name,last_name):
+    dbConn = utils.getDB()
+    sql = """
+    UPDATE Students
+    SET FirstName = ?, LastName = ?
+    WHERE Students_ID = ?
+    """
+    datatier.update_entry(dbConn,sql,[name, last_name, id])
+
+def update_student_email(id, email):
+    dbConn = utils.getDB()
+    sql = """
+    UPDATE Students
+    SET Email = ?
+    WHERE Students_ID = ?
+    """
+    datatier.update_entry(dbConn,sql,[email, id])
+
+def update_student_birthdate(id, birthdate):
+    dbConn = utils.getDB()
+    sql = """
+    UPDATE Students
+    SET Birthdate = ?
+    WHERE Students_ID = ?
+    """
+    datatier.update_entry(dbConn,sql,[birthdate, id])
+
+def update_student_address(id, address):
+    dbConn = utils.getDB()
+    sql = """
+    UPDATE Students
+    SET Address = ?
+    WHERE Students_ID = ?
+    """
+    datatier.update_entry(dbConn,sql,[address, id])
+
+def update_student_identification(id, identification):
+    dbConn = utils.getDB()
+    sql = """
+    UPDATE Students
+    SET Identifies = ?
+    WHERE Students_ID = ?
+    """
+    datatier.update_entry(dbConn,sql,[identification, id])
+
+def update_course_name(code, name):
+    dbConn = utils.getDB()
+    sql = """
+    UPDATE Courses
+    SET Name = ?
+    WHERE Course_Code = ?
+    """
+    datatier.update_entry(dbConn,sql,[name, code])
+
+def update_course_description(code, description):
+    dbConn = utils.getDB()
+    sql = """
+    UPDATE Courses
+    SET Description = ?
+    WHERE Course_Code = ?
+    """
+    datatier.update_entry(dbConn,sql,[description, code])
+
+def update_course_credits(code, credits):
+    dbConn = utils.getDB()
+    sql = """
+    UPDATE Courses
+    SET Credits = ?
+    WHERE Course_Code = ?
+    """
+    datatier.update_entry(dbConn,sql,[credits, code])

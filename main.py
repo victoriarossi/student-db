@@ -60,6 +60,12 @@ if __name__ == "__main__":
                     utils.create_Prerequisites()
                 elif(command == 4):
                     utils.create_Registration()
+                elif(command == 5):
+                    utils.update_student()
+                elif(command == 6):
+                    utils.update_course()
+                elif(command == 7):
+                    utils.update_registration()
         else:
             print("Invalid command, please try again.")
             utils.printCommands()

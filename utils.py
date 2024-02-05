@@ -107,6 +107,9 @@ def print_Update_Commands():
     print("2. Create an new course.")
     print("3. Add a new prerequisites.")
     print("4. Add a new registration.")
+    print("5. Update a student.")
+    print("6. Update a course.")
+    print("7. Update a registration")
     print("Insert 'b' to go to the main menu or 'h' to print the commands.")
 
 def checkCommand(command):
@@ -132,7 +135,8 @@ def display_Students_helper(display):
             identifier = "No identifier"
         else:
             identifier = students[i].identifier
-        print(f"""Name: {students[i].name}
+        print(f"""ID: {students[i].id}
+Name: {students[i].name}
 Email: {students[i].email}
 Birthdate: {students[i].birthdate}
 Address: {students[i].address}
@@ -157,6 +161,7 @@ def display_Courses_helper(display):
         print("There are no more courses")
         return
     for i in range(display,len(courses)):
+        print(courses[i])
         if(len(courses[i].description) == 0):
             description = "No description"
         else:
@@ -215,7 +220,8 @@ def get_student_helper(id):
         identifier = "No identifier"
     else:
         identifier = student.identifier
-    print(f"""Name: {student.name}
+    print(f"""ID: {student.id}
+Name: {student.name}
 Email: {student.email}
 Birthdate: {student.birthdate}
 Address: {student.address}
@@ -241,7 +247,7 @@ def create_Student():
     objecttier.create_student(id, first_name,last_name,email,birthdate, address,identifier)
     i = input("Want to see the students information? (Y/N): ").upper()
     if(i == 'Y'):
-        print(get_student_helper(id))
+        get_student_helper(id)
 
 def get_course():
     code = input("Input the courses's code: ")
@@ -275,7 +281,7 @@ def create_Course():
     objecttier.create_course(code, name, description, credits, prerequisites)
     i = input("Want to see the course information? (Y/N): ").upper()
     if(i == 'Y'):
-        print(get_course_helper(code))
+        get_course_helper(code)
 
 def get_prerequisites():
     code = input("Input the courses code: ")
@@ -324,3 +330,77 @@ def create_Registration():
     i = input("Want to see the student's registration? (Y/N): ").upper()
     if(i == 'Y'):
         get_registration_by_id(id)
+
+def update_student(id = None):
+    if(id == None):
+        id = input("Please insert the student ID: ")
+    print("""What information do you want to change?
+    1. Name and family name
+    2. Email
+    3. Birthdate
+    4. Address
+    5. Identification
+          """)
+    command = input("Input: ")
+    while(command.isalpha()):
+        print("Please enter a valid option.")
+        command = input("Input: ")
+    command = int(command)
+    if(command == 1):
+        name = input("First name: ")
+        last_name = input("Family name: ")
+        objecttier.update_student_name(id, name,last_name)
+    elif(command == 2):
+        email = input("Email: ")
+        objecttier.update_student_email(id, email)
+    elif(command == 3):
+        birthdate = input("Birthdate (YYYY-MM-DD): ")
+        objecttier.update_student_birthdate(id, birthdate)
+    elif(command == 4):
+        address = input("Address: ")
+        objecttier.update_student_address(id, address)
+    elif(command == 5):
+        identification = input("Identification (F/M):")
+        objecttier.update_student_identification(id, identification)
+    i = input("Do you want to change something else? (Y/N): ").upper()
+    if(i == 'Y'):
+        update_student()
+    i = input("Want to see the students information? (Y/N): ").upper()
+    if(i == 'Y'):
+        print(get_student_helper(id))
+    
+
+def update_course(code = None):
+    if(code == None):
+        code = input("Please insert the course code: ")
+    print()
+    get_course_helper(code)
+    print("""What information do you want to change?
+    1. Name
+    2. Description
+    3. Credits
+        """)
+    command = input("Input: ")
+    while(command.isalpha()):
+        print("Please enter a valid option.")
+        command = input("Input: ")
+    command = int(command)
+    if(command == 1):
+        name = input("Name: ")
+        objecttier.update_course_name(code, name)
+    elif(command == 2):
+        description = input("Description: ")
+        objecttier.update_course_description(code, description)
+    elif(command == 3):
+        credits = input("Credits: ")
+        objecttier.update_course_credits(code, credits)
+    i = input("Do you want to change something else? (Y/N): ").upper()
+    if(i == 'Y'):
+        update_course(code)
+    i = input("Want to see the course information? (Y/N): ").upper()
+    if(i == 'Y'):
+        print(get_course_helper(code))
+    
+
+def update_registration():
+    pass

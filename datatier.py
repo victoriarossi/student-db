@@ -84,3 +84,27 @@ def create_entry(dbConn, sql, parameters = None):
    finally:
       dbCursor.close()
    dbConn.commit()
+
+
+########################################################
+#
+# update_entry:
+#
+# Given a database connection and a SQL Select query,
+# executes this query against the database updating the new values
+#
+#
+def update_entry(dbConn, sql, parameters = None):
+   if (parameters == None):
+      parameters = []
+
+   dbCursor = dbConn.cursor()
+
+   try:
+      dbCursor.execute(sql, parameters)
+   except Exception as err:
+      print("update_entry failed:", err)
+      return None
+   finally:
+      dbCursor.close()
+   dbConn.commit()

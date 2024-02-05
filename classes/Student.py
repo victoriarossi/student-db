@@ -1,5 +1,6 @@
 class Student:
-    def __init__(self, name, email, birthdate, address, identifier = ''):
+    def __init__(self, id, name, email, birthdate, address, identifier = ''):
+        self._id = id
         self._name = name
         self._email = email
         self._birthdate = birthdate
@@ -25,3 +26,7 @@ class Student:
     @property
     def identifier(self):
         return self._identifier
+    
+    @property
+    def id(self):
+        return self._id
