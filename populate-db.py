@@ -1,5 +1,4 @@
 import sqlite3
-import os
 import utils
 
 if __name__ == "__main__":

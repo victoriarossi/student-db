@@ -13,7 +13,7 @@ def populateStudents(dbConn):
 
     for i in range(50):
         # Generate random value for a person
-        index = random.randint(0,99)
+        index = random.randint(0,98)
         person_data = info[index]
         student_id = i 
         first_name = person_data[0].split()[0]
@@ -100,6 +100,7 @@ def printCommands():
 def display_Students(display):
     students = objecttier.get_students()
     j = 0
+    identifier = " "
     if(display == len(students)):
         print("There are no more students")
         return
@@ -121,8 +122,36 @@ Identifier: {identifier}
     if(print_more.upper() == 'Y'):
         display_Students(i+1)
 
-def display_Courses():
-    pass
+def display_Courses(display):
+    courses = objecttier.get_courses()
+    j = 0
+    description = " "
+    prerequisites = " "
+    if(display == len(courses)):
+        print("There are no more courses")
+        return
+    for i in range(display,len(courses)):
+        if(len(courses[i].description) == 0):
+            description = "No description"
+        else:
+            description = courses[i].description
+
+        if(len(courses[i].prerequisites) == 0):
+            prerequisites = "No prerequisites"
+        else:
+            prerequisites = courses[i].prerequisites
+        print(f"""Course code: {courses[i].code}
+Course name: {courses[i].name}
+Course credits: {courses[i].credits}
+Course decription: {description}
+Course prerequisites: {prerequisites}
+""")
+        j += 1
+        if(j == 10):
+            break
+    print_more = input("Do you want to see more courses?(Y/N): ")
+    if(print_more.upper() == 'Y'):
+        display_Courses(i+1)
 
 def display_Prerequisites():
     pass

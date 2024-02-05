@@ -10,7 +10,7 @@ if __name__ == "__main__":
         if(command == 1):
             utils.display_Students(0)
         elif(command == 2):
-            utils.display_Courses()
+            utils.display_Courses(0)
         elif(command == 3):
             utils.display_Prerequisites()
         elif(command == 4):
@@ -19,6 +19,8 @@ if __name__ == "__main__":
             utils.create_Course()
         elif(command == 6):
             utils.create_Prerequisites()
+        elif(command == 7):
+            utils.create_Registration()
         else:
             print("Invalid command, please try again.")
             utils.printCommands()

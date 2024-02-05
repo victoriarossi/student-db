@@ -19,10 +19,33 @@ def get_students():
     return s
 
 def get_courses():
-    pass
+    sql = """
+    SELECT *
+    FROM Courses
+    """
+    dbConn = utils.getDB()
+    result = datatier.select_n_rows(dbConn,sql)
+    c = []
+    print(result)
+    for row in result:
+        prerequisites = get_prerequisites(row[0])
+        one = Course.Course(row[0],row[1],row[3],prerequisites,row[2])
+        c.append(one)
+    return c
 
-def get_prerequisites():
-    pass
+def get_prerequisites(code):
+    sql = """
+    SELECT Course_Code1
+    FROM Prerequisites
+    WHERE Course_Code2 = ?
+    """
+    dbConn = utils.getDB()
+    result = datatier.select_n_rows(dbConn,sql,[code])
+    p = []
+    for row in result:
+        p.append(row[0])
+    return p
+    
 
 def create_student():
     pass
