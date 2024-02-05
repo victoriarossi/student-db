@@ -2,6 +2,7 @@ import random
 import csv
 import objecttier
 import sqlite3
+import datetime
 
 def populateStudents(dbConn):
     cursor = dbConn.cursor()
@@ -85,7 +86,6 @@ def getDB():
 #####################################################
     
 
-
 def printCommands():
     print("Please enter one of the following commands:")
     print("1. Display Students.")
@@ -96,6 +96,7 @@ def printCommands():
     print("6. Create an new prerequisites.")
     print("7. Create a new registration.")
     print("8. Display one student information.")
+    print("9. Display one course information.")
     print("Insert 'x' to quit.")
 
 def display_Students():
@@ -122,7 +123,7 @@ Identifier: {identifier}
         j += 1
         if(j == 10):
             break
-    print_more = input("Do you want to see more students?(Y/N): ")
+    print_more = input("Do you want to see more students? (Y/N): ")
     if(print_more.upper() == 'Y'):
         display_Students_helper(i+1)
 
@@ -156,7 +157,7 @@ Course prerequisites: {prerequisites}
         j += 1
         if(j == 10):
             break
-    print_more = input("Do you want to see more courses?(Y/N): ")
+    print_more = input("Do you want to see more courses? (Y/N): ")
     if(print_more.upper() == 'Y'):
         display_Courses_helper(i+1)
 
@@ -174,12 +175,17 @@ def display_Prerequisites_helper(display):
         j += 1
         if(j == 10):
             break
-    print_more = input("Do you want to see more prerequisites?(Y/N): ")
+    print_more = input("Do you want to see more prerequisites? (Y/N): ")
     if(print_more.upper() == 'Y'):
         display_Prerequisites_helper(i+1)
 
-def invalid_format(date):
-    return False
+def valid_date_format(date):
+    try:
+        # Attempt to parse the date string using strptime with the expected format
+        datetime.datetime.strptime(date, '%Y-%m-%d')
+        return True  # Return True if the date string is in the correct format
+    except ValueError:
+        return False  # Return False if the date string is not in the correct format
 
 def get_student():
     id = input("Input the student's ID: ")
@@ -206,22 +212,54 @@ def create_Student():
     last_name = input("Input the student's last name: ")
     email = input("Input the student's email: ")
     birthdate = input("Input the student's birthdate(YYYY-MM-DD): ")
-    while(invalid_format(birthdate)):
+    while(not valid_date_format(birthdate)):
         birthdate = input("Input the student's birthdate(YYYY-MM-DD): ")
     address = input("Input the student's address: ")
-    i = input("Do you want to add an identifier?(Y/N): ")
+    i = input("Do you want to add an identifier? (Y/N): ")
     if(i.upper() == 'Y'):
         identifier = input("Input the student's identifier: ")
     else:
         identifier = ""
     objecttier.create_student(id, first_name,last_name,email,birthdate, address,identifier)
-    i = input("Want to see the students information?(Y/N): ").upper()
+    i = input("Want to see the students information? (Y/N): ").upper()
     if(i == 'Y'):
         print(get_student_helper(id))
 
+def get_course():
+    code = input("Input the courses's code: ")
+    get_course_helper(code)
+
+def get_course_helper(code):
+    course = objecttier.get_course(code)
+    if(course.prerequisites == []):
+        prerequisites = "No prerequisites"
+    else:
+        prerequisites = course.prerequisites
+    print(f"""Code: {course.code}
+Name: {course.name}
+Description: {course.description}
+Credits: {course.credits}
+Prerequisites: {prerequisites}
+""")
+
 
 def create_Course():
-    pass
+    print("Please enter the information of the course you want to create")
+    code = input("Input the course's code: ")
+    name = input("Input the course's name: ")
+    description = input("Input the course's description: ")
+    credits = input("Input the course's number of credits: ")
+    i = input("Does the course have prerequisites? (Y/N): ").upper()
+    if(i == 'Y'):
+        prerequisites = input("Input the course's prerequisites separated by commas: ").split(',')
+    else:
+        prerequisites = []
+    objecttier.create_course(code, name, description, credits, prerequisites)
+    i = input("Want to see the course information? (Y/N): ").upper()
+    if(i == 'Y'):
+        print(get_course_helper(code))
+
+
 
 def create_Prerequisites():
     pass

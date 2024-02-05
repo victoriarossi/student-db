@@ -34,9 +34,9 @@ def get_courses():
 
 def get_prerequisites_by_code(code):
     sql = """
-    SELECT Course_Code1
+    SELECT Course_Code2
     FROM Prerequisites
-    WHERE Course_Code2 = ?
+    WHERE Course_Code1 = ?
     """
     dbConn = utils.getDB()
     result = datatier.select_n_rows(dbConn,sql,[code])
@@ -85,8 +85,29 @@ def create_student(id, first_name, last_name, email, birthdate, address, identif
     """
     datatier.create_entry(dbConn,sql,[id, first_name, last_name, email, birthdate, address, identifier])
 
-def create_course():
-    pass
+def get_course(code):
+    dbConn = utils.getDB()
+
+    sql = """
+    SELECT *
+    FROM Courses
+    WHERE Course_Code = ?
+    """
+    result = datatier.select_one_row(dbConn,sql,[code])
+    prerequisites = get_prerequisites_by_code(code)
+    return Course.Course(result[0], result[1], result[2], prerequisites, result[3])
+
+def create_course(code, name, description, credits, prerequisites):
+    dbConn = utils.getDB()
+    sql = """
+    INSERT INTO Courses VALUES (?,?,?,?)
+    """
+    datatier.create_entry(dbConn, sql, [code, name, description, credits])
+    for course in prerequisites:
+        sql = """
+        INSERT INTO Prerequisites VALUES (?,?)
+        """
+        datatier.create_entry(dbConn, sql, [code,course])
 
 def create_prerequisites():
     pass

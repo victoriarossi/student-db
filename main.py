@@ -23,6 +23,8 @@ if __name__ == "__main__":
             utils.create_Registration()
         elif(command == 8):
             utils.get_student()
+        elif(command == 9):
+            utils.get_course()
         else:
             print("Invalid command, please try again.")
             utils.printCommands()
