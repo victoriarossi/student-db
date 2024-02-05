@@ -88,17 +88,34 @@ def getDB():
 
 def printCommands():
     print("Please enter one of the following commands:")
+    print("1. Display information.")
+    print("2. Update database.")
+    print("Insert 'x' to quit or 'h' to print the commands.")
+
+def print_Display_Commands():
     print("1. Display Students.")
     print("2. Display Courses.")
     print("3. Display Prerequisites.")
-    print("4. Create an new student.")
-    print("5. Create an new course.")
-    print("6. Add a new prerequisites.")
-    print("7. Add a new registration.")
-    print("8. Display one student information.")
-    print("9. Display one course information.")
-    print("10. Display one course prerequisites.")
-    print("Insert 'x' to quit.")
+    print("4. Display one student information.")
+    print("5. Display one course information.")
+    print("6. Display one course prerequisites.")
+    print("7. Display one student registration.")
+    print("Insert 'b' to go to the main menu or 'h' to print the commands.")
+
+def print_Update_Commands():
+    print("1. Create an new student.")
+    print("2. Create an new course.")
+    print("3. Add a new prerequisites.")
+    print("4. Add a new registration.")
+    print("Insert 'b' to go to the main menu or 'h' to print the commands.")
+
+def checkCommand(command):
+    if(command.isdigit() and int(command) > 0 and int(command) < 3):
+        return True
+    elif(command.isalpha() and command.upper() == 'H'):
+        return True
+    elif(command.isalpha() and command.upper() == 'x'):
+        return False
 
 def display_Students():
     display_Students_helper(0)
@@ -283,3 +300,27 @@ def create_Prerequisites():
     i = input("Want to see the new prerequisite? (Y/N): ").upper()
     if(i == 'Y'):
         objecttier.get_prerequisites_by_code(code1)
+
+def get_registrations():
+    id = input("Input the student's ID: ")
+    get_registration_by_id(id)
+
+def get_registration_by_id(id):
+    registrations = objecttier.get_student_registration(id)
+    if(registrations.registration == []):
+        print(f"The student with id '{id}' has no registrations")
+    else:
+        print(f"The student's with id '{id}' registratios are:")
+        i = 1
+        for registration in registrations.registration:
+            print(f"  {i}. {registration[0]} passed with grade: {registration[1]}")
+
+def create_Registration():
+    print("Please enter the information of the student registration")
+    id = input("Input the student ID: ")
+    code = input("Input the course code: ")
+    grade = input("Input the grade: ")
+    objecttier.create_Registration(id,code,grade)
+    i = input("Want to see the student's registration? (Y/N): ").upper()
+    if(i == 'Y'):
+        get_registration_by_id(id)

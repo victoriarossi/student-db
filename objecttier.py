@@ -1,8 +1,8 @@
 import datatier
 import utils
-import sqlite3
-import Student
-import Course
+import classes.Student as Student
+import classes.Course as Course
+import classes.Registration as Registration
 
 def get_students():
     sql = """
@@ -115,3 +115,23 @@ def create_prerequisites(code1, code2):
     INSERT INTO Prerequisites VALUES (?,?)
     """
     datatier.create_entry(dbConn, sql, [code1, code2])
+
+def create_Registration(id, code, grade):
+    dbConn = utils.getDB()
+    sql = """
+    INSERT INTO Registration VALUES (?,?,?)
+    """
+    datatier.create_entry(dbConn, sql, [id, code, grade])
+
+def get_student_registration(id):
+    dbConn = utils.getDB()
+    sql = """
+    SELECT *
+    FROM Registration
+    WHERE Students_ID = ?
+    """
+    result = datatier.select_n_rows(dbConn,sql,[id])
+    r = []
+    for row in result:
+        r.append([row[1],row[2]])
+    return Registration.Registration(result[0][0], r)

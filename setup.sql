@@ -30,10 +30,10 @@ CREATE TABLE Prerequisites (
 
 DROP TABLE IF EXISTS Registration;
 CREATE TABLE Registration (
-    Students_ID INT NOT NULL,
+    Student_ID INT NOT NULL,
     Course_Code INT NOT NULL, 
     Grade CHAR CHECK(Grade IN ('A', 'B', 'C', 'D', 'F')),
-    FOREIGN KEY (Students_ID) REFERENCES Students(Students_ID),
+    FOREIGN KEY (Student_ID) REFERENCES Students(Student_ID),
     FOREIGN KEY (Course_Code) REFERENCES Course(Course_Code),
-    PRIMARY KEY (Students_ID, Course_Code)
+    PRIMARY KEY (Student_ID, Course_Code)
 );
