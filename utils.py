@@ -402,5 +402,14 @@ def update_course(code = None):
         print(get_course_helper(code))
     
 
-def update_registration():
-    pass
+def update_registration(id = None):
+    if(id == None):
+        id = input("Please insert the student id: ")
+    get_registration_by_id(id)
+    code = input("Please insert the course code you want to update: ")
+    grade = input("Insert the new grade: ")
+    objecttier.update_registration(id, code, grade)
+    i = input("Want to see the course information? (Y/N): ").upper()
+    if(i == 'Y'):
+        get_registration_by_id(id)
+    

@@ -134,7 +134,7 @@ def get_student_registration(id):
     r = []
     for row in result:
         r.append([row[1],row[2]])
-    return Registration.Registration(result[0][0], r)
+    return Registration.Registration(id, r)
 
 def update_student_name(id, name,last_name):
     dbConn = utils.getDB()
@@ -207,3 +207,12 @@ def update_course_credits(code, credits):
     WHERE Course_Code = ?
     """
     datatier.update_entry(dbConn,sql,[credits, code])
+
+def update_registration(id, code, grade):
+    dbConn = utils.getDB()
+    sql = """
+    UPDATE Registration
+    SET Grade = ?
+    WHERE Students_ID = ? and Course_Code = ?
+    """
+    datatier.update_entry(dbConn,sql,[grade, id, code])
