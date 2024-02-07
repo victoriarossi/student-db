@@ -4,6 +4,13 @@ import objecttier
 import sqlite3
 import datetime
 
+###########################################################################
+#
+# populateStudents:
+#   Populates the Students table with random values from the csv file 
+#    'students.csv under the resources folder.
+#
+###########################################################################
 def populateStudents(dbConn):
     cursor = dbConn.cursor()
     info = []
@@ -35,6 +42,13 @@ def populateStudents(dbConn):
     # Commit the changes
     dbConn.commit()
 
+###########################################################################
+#
+# populateCourses:
+#   Populates the Courses table with values from the csv file
+#    'courses.csv' under the resources folder.
+#
+###########################################################################
 def populateCourses(dbConn):
     cursor = dbConn.cursor()
     with open('./resources/courses.csv', 'r', newline='') as csvfile:
@@ -48,12 +62,19 @@ def populateCourses(dbConn):
 
             # Insert the random values into the Students table
             sql = f"INSERT INTO Courses VALUES (?, ?, ?, ?)"
-            values = (course_code, name, description, credits)
+            values = (course_code, name, credits, description)
             cursor.execute(sql, values)
 
     # Commit the changes
     dbConn.commit()
 
+###########################################################################
+#
+# populatePrerequisites:
+#   Populates the Prerequisites table with values from the csv file
+#    'prerequisites.csv' under the resources folder.
+#
+###########################################################################    
 def populatePrerequisites(dbConn):
     cursor = dbConn.cursor()
     with open('./resources/prerequisites.csv', 'r', newline='') as csvfile:
@@ -70,28 +91,53 @@ def populatePrerequisites(dbConn):
     # Commit the changes
     dbConn.commit()
 
+###########################################################################
+#
+# populateDatabase:
+#   Populates the students, courses and prerequisites tables.
+#
 def populateDatabase(dbConn):
     populateStudents(dbConn)
     populateCourses(dbConn)
     populatePrerequisites(dbConn)
 
+###########################################################################
+#
+# getDB:
+#   Returns a connection to the database.
+#
+###########################################################################
 def getDB():
     return sqlite3.connect("students.db")
 
 
-#####################################################
+###########################################################################
 #
 # Main Commands
 #
-#####################################################
+###########################################################################
     
 
+    
+###########################################################################
+#
+# printCommands:
+#   Prints the main commands of the program.
+#
+###########################################################################
 def printCommands():
     print("Please enter one of the following commands:")
     print("1. Display information.")
     print("2. Update database.")
     print("Insert 'x' to quit or 'h' to print the commands.")
 
+
+###########################################################################
+#
+# print_Display_Commands:
+#   Prints the display commands of the program.
+#
+###########################################################################
 def print_Display_Commands():
     print("1. Display Students.")
     print("2. Display Courses.")
@@ -102,6 +148,12 @@ def print_Display_Commands():
     print("7. Display one student registration.")
     print("Insert 'b' to go to the main menu or 'h' to print the commands.")
 
+###########################################################################
+#
+# print_Update_Commands:
+#   Prints the update commands of the program.
+#
+###########################################################################
 def print_Update_Commands():
     print("1. Create an new student.")
     print("2. Create an new course.")
@@ -112,96 +164,84 @@ def print_Update_Commands():
     print("7. Update a registration")
     print("Insert 'b' to go to the main menu or 'h' to print the commands.")
 
+###########################################################################
+#
+# checkCommand:
+#   Checks if the command is valid. If the command is valid, it returns True.
+#   If the command is not valid, it returns False.
+#   The command is valid if it is a number between 1 and 2 or if it is 'h' or 'x'.
+#
+###########################################################################
 def checkCommand(command):
     if(command.isdigit() and int(command) > 0 and int(command) < 3):
         return True
     elif(command.isalpha() and command.upper() == 'H'):
         return True
-    elif(command.isalpha() and command.upper() == 'x'):
+    elif(command.isalpha() and command.upper() == 'X'):
         return False
 
-def display_Students():
-    display_Students_helper(0)
-
-def display_Students_helper(display):
-    students = objecttier.get_students()
+###########################################################################
+#
+# display_Students:
+#   Gets the students from the database and displays them.
+#   Command: 1.1
+#
+###########################################################################
+def display_Students(display = 0):
+    students = objecttier.get_students(display+10)
     j = 0
     identifier = " "
     if(display == len(students)):
         print("There are no more students")
         return
     for i in range(display,len(students)):
-        if(students[i].identifier == ' '):
-            identifier = "No identifier"
-        else:
-            identifier = students[i].identifier
-        print(f"""ID: {students[i].id}
-Name: {students[i].name}
-Email: {students[i].email}
-Birthdate: {students[i].birthdate}
-Address: {students[i].address}
-Identifier: {identifier}
-""")
-        j += 1
-        if(j == 10):
-            break
-    print_more = input("Do you want to see more students? (Y/N): ")
-    if(print_more.upper() == 'Y'):
-        display_Students_helper(i+1)
+        get_student(students[i].id)
+    print_more = input("Do you want to see more students? (Y/N): ").upper()
+    if(print_more == 'Y'):
+        display_Students(i+1)
 
-def display_Courses():
-    display_Courses_helper(0)
-
-def display_Courses_helper(display):
-    courses = objecttier.get_courses()
-    j = 0
-    description = " "
-    prerequisites = " "
+###########################################################################
+#
+# display_Courses:
+#   Gets the courses from the database and displays them.
+#   Command: 1.2
+#
+###########################################################################
+def display_Courses(display = 0):
+    courses = objecttier.get_courses(display+10)
     if(display == len(courses)):
         print("There are no more courses")
         return
     for i in range(display,len(courses)):
-        print(courses[i])
-        if(len(courses[i].description) == 0):
-            description = "No description"
-        else:
-            description = courses[i].description
+        get_course(courses[i].code)
 
-        if(len(courses[i].prerequisites) == 0):
-            prerequisites = "No prerequisites"
-        else:
-            prerequisites = courses[i].prerequisites
-        print(f"""Course code: {courses[i].code}
-Course name: {courses[i].name}
-Course credits: {courses[i].credits}
-Course decription: {description}
-Course prerequisites: {prerequisites}
-""")
-        j += 1
-        if(j == 10):
-            break
-    print_more = input("Do you want to see more courses? (Y/N): ")
-    if(print_more.upper() == 'Y'):
-        display_Courses_helper(i+1)
+    print_more = input("Do you want to see more courses? (Y/N): ").upper()
+    if(print_more == 'Y'):
+        display_Courses(i+1)
 
+###########################################################################
+#
+# display_Prerequisites:
+#   Gets the prerequisites from the database and displays them.
+#   Command: 1.3
+#
+###########################################################################
 def display_Prerequisites():
-    display_Prerequisites_helper(0)
-
-def display_Prerequisites_helper(display):
     prerequisites = objecttier.get_prerequisites()
-    j = 0
-    if(display == len(prerequisites)):
-        print("There are no more students")
+    if(len(prerequisites) == 0):
+        print("There are no prerequisites")
         return
-    for i in range(display,len(prerequisites)):
-        print(f"{prerequisites[i][0]} ({prerequisites[i][1]}) is a prerequisite of {prerequisites[i][2]} ({prerequisites[i][3]})")
-        j += 1
-        if(j == 10):
-            break
-    print_more = input("Do you want to see more prerequisites? (Y/N): ")
-    if(print_more.upper() == 'Y'):
-        display_Prerequisites_helper(i+1)
+    for prereq in range(len(prerequisites)):
+        print(f"{prereq[0]} ({prereq[1]}) is a prerequisite of {prereq[2]} ({prereq[3]})")
 
+###########################################################################
+#
+# valid_date_format:
+#   Checks if the date string is in the correct format.
+#   The correct format is 'YYYY-MM-DD'.
+#   If the date string is in the correct format, it returns True. Else, returns False.
+#
+###########################################################################
 def valid_date_format(date):
     try:
         # Attempt to parse the date string using strptime with the expected format
@@ -210,11 +250,16 @@ def valid_date_format(date):
     except ValueError:
         return False  # Return False if the date string is not in the correct format
 
-def get_student():
-    id = input("Input the student's ID: ")
-    get_student_helper(id)
-
-def get_student_helper(id):
+###########################################################################
+#
+# get_student:
+#   With an id, gets that student from the database and displays it.
+#   Command: 1.4
+#
+###########################################################################
+def get_student(id = None):
+    if(id == None):
+        id = input("Input the student's ID: ")
     student = objecttier.get_student(id)
     if(student.identifier == ''):
         identifier = "No identifier"
@@ -228,7 +273,13 @@ Address: {student.address}
 Identifier: {identifier}
 """)
 
-
+###########################################################################
+#
+# create_Student:
+#   Creates a new student and adds it to the database.
+#   Command: 2.1
+#
+###########################################################################
 def create_Student():
     print("Please enter the information of the student you want to create")
     id = input("Input the student's ID number: ")
@@ -245,15 +296,20 @@ def create_Student():
     else:
         identifier = ""
     objecttier.create_student(id, first_name,last_name,email,birthdate, address,identifier)
-    i = input("Want to see the students information? (Y/N): ").upper()
-    if(i == 'Y'):
-        get_student_helper(id)
+    info = input("Want to see the students information? (Y/N): ").upper()
+    if(info == 'Y'):
+        get_student(id)
 
-def get_course():
-    code = input("Input the courses's code: ")
-    get_course_helper(code)
-
-def get_course_helper(code):
+###########################################################################
+#
+# get_course:
+#   With a code, gets that course from the database and displays it.
+#   Command: 1.5
+#
+###########################################################################
+def get_course(code = None):
+    if(code == None):
+        code = input("Input the courses's code: ")
     course = objecttier.get_course(code)
     if(course.prerequisites == []):
         prerequisites = "No prerequisites"
@@ -266,7 +322,13 @@ Credits: {course.credits}
 Prerequisites: {prerequisites}
 """)
 
-
+###########################################################################
+#
+# create_Course:
+#   Creates a new course and adds it to the database.
+#   Command: 2.2
+#
+###########################################################################
 def create_Course():
     print("Please enter the information of the course you want to create")
     code = input("Input the course's code: ")
@@ -281,13 +343,18 @@ def create_Course():
     objecttier.create_course(code, name, description, credits, prerequisites)
     i = input("Want to see the course information? (Y/N): ").upper()
     if(i == 'Y'):
-        get_course_helper(code)
+        get_course(code)
 
-def get_prerequisites():
-    code = input("Input the courses code: ")
-    get_prerequisites_by_code(code)
-
-def get_prerequisites_by_code(code):
+###########################################################################
+#
+# get_prerequisites:
+#   With a code, gets that course from the database and displays its prerequisites.
+#   Command: 1.6
+#
+###########################################################################
+def get_prerequisites(code = None):
+    if(code == None):
+        code = input("Input the course's code: ")
     prerequisites = objecttier.get_prerequisites_by_code(code)
     if(prerequisites == []):
         print(f"{code} has no prerequisites")
@@ -298,6 +365,13 @@ def get_prerequisites_by_code(code):
             print(f"  {i}. {course}")
             i += 1
 
+###########################################################################
+#
+# create_Prerequisites:
+#   Creates a new prerequisite and adds it to the database.
+#   Command: 2.3
+#
+###########################################################################
 def create_Prerequisites():
     print("Please enter the information of the courses")
     code2 = input("Input the course's prerequisite: ")
@@ -307,20 +381,33 @@ def create_Prerequisites():
     if(i == 'Y'):
         objecttier.get_prerequisites_by_code(code1)
 
-def get_registrations():
-    id = input("Input the student's ID: ")
-    get_registration_by_id(id)
-
-def get_registration_by_id(id):
+###########################################################################
+#
+# get_registrations:
+#   With an id, gets that student's registrations from the database and displays them.
+#   Command: 1.7
+#
+###########################################################################
+def get_registrations(id = None):
+    if(id == None):
+        id = input("Input the student's ID: ")
     registrations = objecttier.get_student_registration(id)
     if(registrations.registration == []):
         print(f"The student with id '{id}' has no registrations")
+        return -1
     else:
         print(f"The student's with id '{id}' registratios are:")
         i = 1
         for registration in registrations.registration:
             print(f"  {i}. {registration[0]} passed with grade: {registration[1]}")
 
+###########################################################################
+#
+# create_Registration:
+#   Creates a new registration and adds it to the database.
+#   Command: 2.4
+#
+###########################################################################
 def create_Registration():
     print("Please enter the information of the student registration")
     id = input("Input the student ID: ")
@@ -329,8 +416,15 @@ def create_Registration():
     objecttier.create_Registration(id,code,grade)
     i = input("Want to see the student's registration? (Y/N): ").upper()
     if(i == 'Y'):
-        get_registration_by_id(id)
+        get_registrations(id)
 
+###########################################################################
+#
+# update_student:
+#   Updates a student's information in the database.
+#   Command: 2.5
+#
+###########################################################################
 def update_student(id = None):
     if(id == None):
         id = input("Please insert the student ID: ")
@@ -367,14 +461,20 @@ def update_student(id = None):
         update_student()
     i = input("Want to see the students information? (Y/N): ").upper()
     if(i == 'Y'):
-        print(get_student_helper(id))
+        get_student(id)
     
-
+###########################################################################
+#
+# update_course:
+#   Updates a course's information in the database.
+#   Command: 2.6
+#
+###########################################################################
 def update_course(code = None):
     if(code == None):
         code = input("Please insert the course code: ")
     print()
-    get_course_helper(code)
+    get_course(code)
     print("""What information do you want to change?
     1. Name
     2. Description
@@ -399,17 +499,25 @@ def update_course(code = None):
         update_course(code)
     i = input("Want to see the course information? (Y/N): ").upper()
     if(i == 'Y'):
-        print(get_course_helper(code))
+        print(get_course(code))
     
-
+###########################################################################
+#
+# update_registration:
+#   Updates a registration's information in the database.
+#   Command: 2.7
+#
+###########################################################################
 def update_registration(id = None):
     if(id == None):
         id = input("Please insert the student id: ")
-    get_registration_by_id(id)
+    registrations = get_registrations(id)
+    if(registrations == -1):
+        return
     code = input("Please insert the course code you want to update: ")
     grade = input("Insert the new grade: ")
     objecttier.update_registration(id, code, grade)
     i = input("Want to see the course information? (Y/N): ").upper()
     if(i == 'Y'):
-        get_registration_by_id(id)
+        get_registrations(id)
     

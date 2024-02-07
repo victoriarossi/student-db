@@ -64,37 +64,13 @@ def select_n_rows(dbConn, sql, parameters = None):
 
 ########################################################
 #
-# create_entry:
-#
-# Given a database connection and a SQL Select query,
-# executes this query against the database inserting the new values
-#
-#
-def create_entry(dbConn, sql, parameters = None):
-   if (parameters == None):
-      parameters = []
-
-   dbCursor = dbConn.cursor()
-
-   try:
-      dbCursor.execute(sql, parameters)
-   except Exception as err:
-      print("create_entry failed:", err)
-      return None
-   finally:
-      dbCursor.close()
-   dbConn.commit()
-
-
-########################################################
-#
-# update_entry:
+# perform_action:
 #
 # Given a database connection and a SQL Select query,
 # executes this query against the database updating the new values
 #
 #
-def update_entry(dbConn, sql, parameters = None):
+def perform_action(dbConn, sql, parameters = None):
    if (parameters == None):
       parameters = []
 

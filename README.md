@@ -16,8 +16,8 @@ git clone https://github.com/victoriarossi/student-db.git
 ### Usage
 This project was created and executed on the Mac OS X operating system.
 To start the application:
-1. Run the main python file to make sure that the database is created and populated. 
-2. Run the application python file and interact with the application on the terminal. 
+1. Run the `populate-db.py` python file to make sure that the database is created and populated. 
+2. Run the `main.py` python file and interact with the application on the terminal. 
 
 ## Information
 **Author:** Rossi Victoria.
