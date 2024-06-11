@@ -1,7 +1,6 @@
 # Student database 
 ## Introduction
 A python and SQL command line application with a Student database. 
-- [App](./application.py)
 
 ## Datasets used
 The dataset used can be found under the [resources](./resources/) folder. The datasets were created with information on the [UIC Course Catalog](https://catalog.uic.edu/all-course-descriptions/) website. All data on Students was created with an AI and is not real. 
